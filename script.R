@@ -1,5 +1,6 @@
 library(tidyverse)
 library(ggplot2)
+library(caret)
 
 
 music <- read_csv("music_genre.csv")
@@ -22,20 +23,64 @@ music$tempo <-
 music$key <- as.factor(music$key)
 music$mode <- as.factor(music$mode)
 music$music_genre <- as.factor(music$music_genre)
+music <- music %>% select(-obtained_date, -instance_id, -artist_name, -track_name)
+
+set.seed(34)
+tempindex <- sample(c(1:50000), 1000)
+music <- music[tempindex, ]
 
 ###EDA
+
+quant_var <- c("popularity", "acousticness", "danceability", "duration_ms", "energy", "liveliness", "loudness", "mode", "tempo", "valence")
 
 g <- ggplot(music, aes(x=music_genre, y=danceability))
 g + geom_boxplot(fill = "grey") +
   labs(x = "Genre", y = "Danceability", title = "Danceability by Music Genre")
 
-music %>% select(artist_name, track_name, popularity, key, mode, music_genre) %>% filter(between(popularity, 1,2) & music_genre == "Rock")
+music %>% group_by(music_genre) %>% summarize(Min = min(valence), Median = median(valence), Mean = mean(valence), Max = max(valence), StDv = sd(valence))
 
 music_ <- music %>% filter(music_genre == "Anime" | music_genre == "Country")
-g <- ggplot(music_, aes(x=valence, y=acousticness))
+g <- ggplot(music_, aes(x=valence, y=speechiness))
 g + geom_point(aes(colour = music_genre), alpha = 0.5, position = "jitter") +
   geom_smooth(method="lm", fill="blue", se=TRUE)
 
 g <- ggplot(music, aes(x=valence, y=..density..,fill=key))
 g+ geom_histogram(position="dodge", binwidth=10)
-g+ geom_density(adjust = 0.5, alpha = 0.5)
+g+ geom_density(adjust = 0.5, alpha = 0.5) +
+  facet_wrap(~ music_genre)
+
+### Prediction
+
+set.seed(828)
+dfIndex <- createDataPartition(music$music_genre, p=0.8, list=FALSE)
+musicTrain <- music[dfIndex, ]
+musicTest <- music[-dfIndex, ]
+
+music_lm <- train(popularity ~ loudness + valence + music_genre, data=musicTrain,
+                  method="lm",
+                  preProcess=c("center", "scale"),
+                  trControl=trainControl(method="cv", number=5))
+music_lm$results
+summary(music_lm)
+
+music_lm_p <- predict(music_lm, newdata = musicTest)
+postResample(music_lm_p, musicTest$popularity)
+
+predict(music_lm, newdata = data.frame(loudness=-7, valence=.9, music_genre="Rock"))
+
+
+music_rf <- train(popularity ~ ., data=musicTrain,
+                  method="rf",
+                  preProcess=c("center", "scale"),
+                  trControl=trainControl(method="cv", number=5),
+                  tuneGrid=data.frame(mtry=1:5))
+music_rf$results
+music_rf$bestTune
+
+g <- ggplot(music_rf$results, aes(x=mtry, y=Rsquared))
+g + geom_line()
+
+music_rf_p <- predict(music_rf, newdata=musicTest)
+postResample(music_rf_p, musicTest$popularity)
+
+predict(music_rf, newdata = data.frame(loudness= -7, valence=.9, music_genre="Rock"))

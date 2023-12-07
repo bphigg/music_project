@@ -1,18 +1,15 @@
 library(shiny)
 
+quant_var <- c("popularity", "acousticness", "danceability", "duration_ms", "energy", "liveliness", "loudness", "mode", "tempo", "valence")
+
 # Define server logic required to draw a histogram
 function(input, output, session) {
 
-    output$distPlot <- renderPlot({
+    output$selectedPlot <- renderPlot({
 
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
+      g <- ggplot(music, aes(x=valence, y=danceability))
+      g + geom_point(aes(colour = music_genre), alpha = 0.5, position = "jitter") +
+        geom_smooth(method="lm", fill="blue", se=TRUE)
 
     })
 
