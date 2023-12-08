@@ -26,4 +26,12 @@ function(input, output, session) {
       geom_violin(alpha=0.5) + geom_boxplot(width=0.2, color="grey", alpha=0.9)
     })
 
+    hist_data <- reactive({
+      newdata1 <- music %>% filter(music_genre == input$hist_genre1 | music_genre == input$hist_genre2)
+    })
+    output$histPlot <- renderPlot({
+      newdata1 <- hist_data()
+      ggplot(newdata1, aes_string(x=input$hist_x, fill=newdata1$music_genre)) +
+      geom_histogram(bins=input$hist_slide, position=input$hist_radio)
+    })
 }

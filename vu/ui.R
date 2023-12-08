@@ -34,7 +34,19 @@ shinyUI(navbarPage(
                         p("Investigate the distribution of measurements by categories"),
                         radioButtons("box_radio", label = h5("Categories"), choices = list("Genre" = "music_genre", "Key" = "key"), selected = "music_genre"),
                         selectInput("box_y", "Measurement", selected = "valence", choices = quant_var),
-                        )
+                        ),
+# Histogram
+        conditionalPanel(condition = "input.plot == 3",
+                         p("Compare measurements by specific genres"),
+                         selectInput("hist_genre1", "Genre 1", selected = "Alternative", 
+                                     choices = levels(as.factor(music$music_genre))),
+                         selectInput("hist_genre2", "Genre 2", selected = "Hip-Hop", 
+                                     choices = levels(as.factor(music$music_genre))),
+                         selectInput("hist_x", "Measurement", selected = "tempo", choices = quant_var),
+                         sliderInput("hist_slide", label=h6("Select Bins"), min=20, max=150,
+                                     value=50, step=10),
+                         radioButtons("hist_radio", label = h6("Display"), choices = list("Side-by-Side" = "dodge", "Stacked" = "stack"), selected = "dodge")
+                         ),
         ),
 
         # Show a plot of the generated distribution
@@ -45,6 +57,9 @@ shinyUI(navbarPage(
           conditionalPanel(condition = "input.plot == 2",
             plotOutput("boxPlot")
             ),
-          )
+        conditionalPanel(condition = "input.plot == 3",
+            plotOutput("histPlot")
+            ),  
+        )
     ),
 )))

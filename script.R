@@ -44,10 +44,10 @@ g <- ggplot(music_, aes(x=tempo, y=tempo))
 g + geom_point(aes(colour = key), alpha = 0.5, position = "jitter") +
   geom_smooth(method="lm", fill="blue", se=TRUE)
 
-g <- ggplot(music, aes(x=valence))
-g+ geom_histogram()
+g <- ggplot(music, aes(x=tempo, fill=mode))
+g+ geom_histogram(bins=100, position="dodge")
 
-g <- ggplot(music, aes(x=valence, y=..density..,fill=key))
+g <- ggplot(music, aes(x=tempo, y=..density..,fill=key))
 g+ geom_density(adjust = 0.5, alpha = 0.5) +
   facet_wrap(~ music_genre)
 
