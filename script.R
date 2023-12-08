@@ -47,9 +47,10 @@ g + geom_point(aes(colour = key), alpha = 0.5, position = "jitter") +
 g <- ggplot(music, aes(x=tempo, fill=mode))
 g+ geom_histogram(bins=100, position="dodge")
 
-g <- ggplot(music, aes(x=tempo, y=..density..,fill=key))
-g+ geom_density(adjust = 0.5, alpha = 0.5) +
-  facet_wrap(~ music_genre)
+g <- ggplot(music, aes(x=tempo)) +
+geom_density(aes(fill = key), adjust = 0.5, alpha = 0.5, kernel = "rectangular")
+g
+g + facet_wrap(~ music_genre)
 
 ### Prediction
 

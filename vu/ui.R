@@ -47,6 +47,16 @@ shinyUI(navbarPage(
                                      value=50, step=10),
                          radioButtons("hist_radio", label = h6("Display"), choices = list("Side-by-Side" = "dodge", "Stacked" = "stack"), selected = "dodge")
                          ),
+# Geom_Density
+        conditionalPanel(condition = "input.plot == 4",
+                         p("View density of measurements by key"),
+                         selectInput("kernal_x", "Measurement", selected = "popularity", 
+                                     choices = quant_var),
+                         radioButtons("kernel", choices = list("Smooth" = "gaussian", 
+                                                               "Rectangular" = "rectangular"),
+                                      selected = "gaussian", label = NULL),
+                         checkboxInput("facet", h6("Facet Wrap Genres")),
+                         )
         ),
 
         # Show a plot of the generated distribution
@@ -59,7 +69,11 @@ shinyUI(navbarPage(
             ),
         conditionalPanel(condition = "input.plot == 3",
             plotOutput("histPlot")
-            ),  
+            ),
+        conditionalPanel(condition = "input.plot == 4",
+            plotOutput("densityPlot")
+            ),
+        
         )
     ),
 )))

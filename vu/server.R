@@ -34,4 +34,16 @@ function(input, output, session) {
       ggplot(newdata1, aes_string(x=input$hist_x, fill=newdata1$music_genre)) +
       geom_histogram(bins=input$hist_slide, position=input$hist_radio)
     })
+    
+    output$densityPlot <- renderPlot({
+      h <- ggplot(music, aes_string(x=input$kernal_x)) +
+      geom_density(aes_string(fill=music$key), adjust = 0.5, alpha = 0.5, kernel = input$kernel)
+      
+      if(input$facet){
+        h + facet_wrap(~ music_genre)
+      } else{
+        h
+      }
+    })
+    
 }
