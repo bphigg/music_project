@@ -10,9 +10,13 @@ shinyUI(navbarPage(
   theme = shinythemes::shinytheme("cosmo"),
   "VU app",
   tabPanel("About",
+           h2(strong("Welcome to the VU App")),
+           strong("an exploration of song measurements"),
+           img(src="vu_image1.png", align = "center", height = "50%", width = "100%"),
            h5("Empty For Now")
-  ),
+           ),
   
+# Plots/Graphs
   tabPanel("Plots/Graphs",
 
     # Sidebar 
@@ -80,4 +84,14 @@ shinyUI(navbarPage(
         dataTableOutput("sum_stats")
         )
     ),
-)))
+),
+# Modeling
+  tabPanel("Modeling",
+    tabsetPanel(type = "tabs",
+                tabPanel("About"),
+                tabPanel("Modeling"),
+                tabPanel("Predicting"),
+                )
+  )
+
+))
