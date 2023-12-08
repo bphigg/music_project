@@ -3,10 +3,10 @@ library(ggplot2)
 library(caret)
 
 
+
 music <- read_csv("music_genre.csv")
 music$duration_ms <- replace(music$duration_ms, music$duration_ms == -1, 245503.5)
 music <- music[-10001:-10005, ]
-sum(is.na(music$tempo))
 music$tempo <- as.double(music$tempo, length = 0)
 #music <- music %>% filter(is.na(tempo))
 #temp <- drop_na(music, tempo)
@@ -26,26 +26,28 @@ music$music_genre <- as.factor(music$music_genre)
 music <- music %>% select(-obtained_date, -instance_id, -artist_name, -track_name)
 
 set.seed(34)
-tempindex <- sample(c(1:50000), 1000)
+tempindex <- sample(c(1:50000), 5000)
 music <- music[tempindex, ]
 
 ###EDA
 
-quant_var <- c("popularity", "acousticness", "danceability", "duration_ms", "energy", "liveliness", "loudness", "mode", "tempo", "valence")
+quant_var <- c("popularity", "acousticness", "danceability", "duration_ms", "energy", "liveliness", "loudness", "tempo", "valence")
 
-g <- ggplot(music, aes(x=music_genre, y=danceability))
-g + geom_boxplot(fill = "grey") +
+g <- ggplot(music, aes(x=music_genre, y=danceability, fill = music_genre))
+g + geom_violin(alpha=0.5) + geom_boxplot(width=0.2, color="grey", alpha=0.9) +
   labs(x = "Genre", y = "Danceability", title = "Danceability by Music Genre")
 
 music %>% group_by(music_genre) %>% summarize(Min = min(valence), Median = median(valence), Mean = mean(valence), Max = max(valence), StDv = sd(valence))
 
-music_ <- music %>% filter(music_genre == "Anime" | music_genre == "Country")
-g <- ggplot(music_, aes(x=valence, y=speechiness))
-g + geom_point(aes(colour = music_genre), alpha = 0.5, position = "jitter") +
+music_ <- music %>% filter(music_genre == "Hip-Hop")
+g <- ggplot(music_, aes(x=tempo, y=tempo))
+g + geom_point(aes(colour = key), alpha = 0.5, position = "jitter") +
   geom_smooth(method="lm", fill="blue", se=TRUE)
 
+g <- ggplot(music, aes(x=valence))
+g+ geom_histogram()
+
 g <- ggplot(music, aes(x=valence, y=..density..,fill=key))
-g+ geom_histogram(position="dodge", binwidth=10)
 g+ geom_density(adjust = 0.5, alpha = 0.5) +
   facet_wrap(~ music_genre)
 
