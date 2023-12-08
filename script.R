@@ -31,7 +31,7 @@ music <- music[tempindex, ]
 
 ###EDA
 
-quant_var <- c("popularity", "acousticness", "danceability", "duration_ms", "energy", "liveliness", "loudness", "tempo", "valence")
+quant_var <- c("popularity", "acousticness", "danceability", "duration_ms", "energy", "liveness", "loudness", "tempo", "valence")
 
 g <- ggplot(music, aes(x=music_genre, y=danceability, fill = music_genre))
 g + geom_violin(alpha=0.5) + geom_boxplot(width=0.2, color="grey", alpha=0.9) +

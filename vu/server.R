@@ -1,6 +1,6 @@
 library(shiny)
 
-quant_var <- c("popularity", "acousticness", "danceability", "duration_ms", "energy", "liveliness", "loudness", "tempo", "valence")
+quant_var <- c("popularity", "acousticness", "danceability", "duration_ms", "energy", "liveness", "loudness", "tempo", "valence")
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
@@ -44,6 +44,15 @@ function(input, output, session) {
       } else{
         h
       }
+    })
+    
+    output$sum_stats <- DT::renderDataTable({
+      music %>% group_by(music_genre) %>% summarize(Min = round(min(get(input$sum_stats)), 2), 
+                Median = round(median(get(input$sum_stats)), 2), 
+                Mean = round(mean(get(input$sum_stats)),2), 
+                Max = round(max(get(input$sum_stats)),2),
+                StDv = round(sd(get(input$sum_stats)), 2)
+                )
     })
     
 }

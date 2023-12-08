@@ -3,10 +3,11 @@ library(shinythemes)
 library(tidyverse)
 library(ggplot2)
 library(caret)
+library(DT)
 
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(
-  theme = shinythemes::shinytheme("darkly"),
+  theme = shinythemes::shinytheme("cosmo"),
   "VU app",
   tabPanel("About",
            h5("Empty For Now")
@@ -56,7 +57,10 @@ shinyUI(navbarPage(
                                                                "Rectangular" = "rectangular"),
                                       selected = "gaussian", label = NULL),
                          checkboxInput("facet", h6("Facet Wrap Genres")),
-                         )
+                         ),
+         br(),
+         h3("View Summary Statistics"),
+         selectInput("sum_stats", "Measurement", selected = "danceability", choices = quant_var)
         ),
 
         # Show a plot of the generated distribution
@@ -73,7 +77,7 @@ shinyUI(navbarPage(
         conditionalPanel(condition = "input.plot == 4",
             plotOutput("densityPlot")
             ),
-        
+        dataTableOutput("sum_stats")
         )
     ),
 )))
