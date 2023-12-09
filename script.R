@@ -8,26 +8,26 @@ music <- read_csv("music_genre.csv")
 music$duration_ms <- replace(music$duration_ms, music$duration_ms == -1, 245503.5)
 music <- music[-10001:-10005, ]
 music$tempo <- as.double(music$tempo, length = 0)
-#music <- music %>% filter(is.na(tempo))
-#temp <- drop_na(music, tempo)
-music$tempo <- 
-  if_else(music$music_genre == "Alternative", replace_na(music$tempo, 123),
-          if_else(music$music_genre == "Anime", replace_na(music$tempo, 127),
-          if_else(music$music_genre == "Blues", replace_na(music$tempo, 121),
-          if_else(music$music_genre == "Classical", replace_na(music$tempo, 104),
-          if_else(music$music_genre == "Country", replace_na(music$tempo, 124),
-          if_else(music$music_genre == "Electronic", replace_na(music$tempo, 126),
-          if_else(music$music_genre == "Hip-Hop", replace_na(music$tempo, 120),
-          if_else(music$music_genre == "Jazz", replace_na(music$tempo, 112),
-          if_else(music$music_genre == "Rap", replace_na(music$tempo, 121), replace_na(music$tempo, 123))))))))))
+music <- drop_na(music, tempo)
 music$key <- as.factor(music$key)
 music$mode <- as.factor(music$mode)
 music$music_genre <- as.factor(music$music_genre)
 music <- music %>% select(-obtained_date, -instance_id, -artist_name, -track_name)
-
-set.seed(34)
-tempindex <- sample(c(1:50000), 5000)
+set.seed(808)
+tempindex <- sample(c(1:45000), 5000)
 music <- music[tempindex, ]
+#music <- music %>% filter(is.na(tempo))
+#temp <- drop_na(music, tempo)
+#music$tempo <- 
+#  if_else(music$music_genre == "Alternative", replace_na(music$tempo, 123),
+#          if_else(music$music_genre == "Anime", replace_na(music$tempo, 127),
+#          if_else(music$music_genre == "Blues", replace_na(music$tempo, 121),
+#          if_else(music$music_genre == "Classical", replace_na(music$tempo, 104),
+#          if_else(music$music_genre == "Country", replace_na(music$tempo, 124),
+#          if_else(music$music_genre == "Electronic", replace_na(music$tempo, 126),
+#          if_else(music$music_genre == "Hip-Hop", replace_na(music$tempo, 120),
+#          if_else(music$music_genre == "Jazz", replace_na(music$tempo, 112),
+#          if_else(music$music_genre == "Rap", replace_na(music$tempo, 121), replace_na(music$tempo, 123#))))))))))
 
 ###EDA
 
