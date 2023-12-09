@@ -16,6 +16,7 @@ music <- music %>% select(-obtained_date, -instance_id, -artist_name, -track_nam
 set.seed(808)
 tempindex <- sample(c(1:45000), 5000)
 music <- music[tempindex, ]
+write_csv(music, "songs.csv")
 #music <- music %>% filter(is.na(tempo))
 #temp <- drop_na(music, tempo)
 #music$tempo <- 

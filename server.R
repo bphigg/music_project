@@ -2,18 +2,7 @@ library(shiny)
 
 quant_var <- c("popularity", "acousticness", "danceability", "duration_ms", "energy", "liveness", "loudness", "tempo", "valence")
 
-music <- read_csv("music_genre.csv")
-music$duration_ms <- replace(music$duration_ms, music$duration_ms == -1, 245503.5)
-music <- music[-10001:-10005, ]
-music$tempo <- as.double(music$tempo, length = 0)
-music <- drop_na(music, tempo)
-music$key <- as.factor(music$key)
-music$mode <- as.factor(music$mode)
-music$music_genre <- as.factor(music$music_genre)
-music <- music %>% select(-obtained_date, -instance_id, -artist_name, -track_name)
-set.seed(808)
-tempindex <- sample(c(1:45000), 5000)
-music <- music[tempindex, ]
+music <- read_csv("songs.csv")
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
