@@ -3,7 +3,7 @@ library(shinythemes)
 library(tidyverse)
 library(ggplot2)
 library(caret)
-library(DT)
+library(DT) 
 
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(
@@ -27,8 +27,8 @@ shinyUI(navbarPage(
                         choices = list("Scatter"=1, "Box"=2, "Histogram"=3, "Kernal Smoother"=4)),
 # ScatterPlot
         conditionalPanel(condition = "input.plot == 1",
-                         selectInput("scatter_genre", "Genre", selected = "Alternative", 
-                                     choices = levels(as.factor(music$music_genre))),
+                         selectInput("scatter_genre", "Genre", selected = 4, 
+                                     choices = music$music_genre),
                          selectInput("scatter_x", "X-axis", selected = "valence", choices = quant_var),
                          selectInput("scatter_y", "Y-axis", selected = "tempo", choices = quant_var),
         checkboxInput("reg_line", h6("Add a Regression Line")),
@@ -43,10 +43,10 @@ shinyUI(navbarPage(
 # Histogram
         conditionalPanel(condition = "input.plot == 3",
                          p("Compare measurements by specific genres"),
-                         selectInput("hist_genre1", "Genre 1", selected = "Alternative", 
-                                     choices = levels(as.factor(music$music_genre))),
-                         selectInput("hist_genre2", "Genre 2", selected = "Hip-Hop", 
-                                     choices = levels(as.factor(music$music_genre))),
+                         selectInput("hist_genre1", "Genre 1", selected = 1, 
+                                     choices = music$music_genre),
+                         selectInput("hist_genre2", "Genre 2", selected = 10, 
+                                     choices = music$music_genre),
                          selectInput("hist_x", "Measurement", selected = "tempo", choices = quant_var),
                          sliderInput("hist_slide", label=h6("Select Bins"), min=20, max=150,
                                      value=50, step=10),
