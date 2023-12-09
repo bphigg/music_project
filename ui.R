@@ -5,6 +5,11 @@ library(ggplot2)
 library(caret)
 library(DT) 
 
+music <- read_csv("www/songs.csv")
+music$key <- as.factor(music$key)
+music$mode <- as.factor(music$mode)
+music$music_genre <- as.factor(music$music_genre)
+
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(
   theme = shinythemes::shinytheme("cosmo"),
