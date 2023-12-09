@@ -10,6 +10,8 @@ music$key <- as.factor(music$key)
 music$mode <- as.factor(music$mode)
 music$music_genre <- as.factor(music$music_genre)
 
+quant_var <- c("popularity", "acousticness", "danceability", "duration_ms", "energy", "liveness", "loudness", "tempo", "valence")
+
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(
   theme = shinythemes::shinytheme("cosmo"),
