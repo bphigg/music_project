@@ -62,7 +62,7 @@ dfIndex <- createDataPartition(music$music_genre, p=0.8, list=FALSE)
 musicTrain <- music[dfIndex, ]
 musicTest <- music[-dfIndex, ]
 
-music_lm <- train(popularity ~ loudness + valence + music_genre, data=musicTrain,
+music_lm <- train(popularity ~ loudness * valence * music_genre, data=musicTrain,
                   method="lm",
                   preProcess=c("center", "scale"),
                   trControl=trainControl(method="cv", number=5))
@@ -75,11 +75,11 @@ postResample(music_lm_p, musicTest$popularity)
 predict(music_lm, newdata = data.frame(loudness=-7, valence=.9, music_genre="Rock"))
 
 
-music_rf <- train(popularity ~ ., data=musicTrain,
+music_rf <- train(popularity ~ loudness * valence * music_genre, data=musicTrain,
                   method="rf",
                   preProcess=c("center", "scale"),
                   trControl=trainControl(method="cv", number=5),
-                  tuneGrid=data.frame(mtry=1:5))
+                  tuneGrid=data.frame(mtry=1:10))
 music_rf$results
 music_rf$bestTune
 

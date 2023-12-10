@@ -96,7 +96,16 @@ shinyUI(navbarPage(
   tabPanel("Modeling",
     tabsetPanel(type = "tabs",
                 tabPanel("About"),
-                tabPanel("Modeling"),
+                tabPanel("Modeling",
+                         h2("Build Models"),
+                         
+                         selectInput("model_1", "1st Measurement", choices = quant_var),
+                         selectInput("model_2", "2nd Measurement", selected = "danceability",
+                                     choices = quant_var),
+                         radioButtons("model_cat", label = h6("Categorical Selection"),
+                                      choices = list("Genre" = "music_genre", "Key" = "key"),
+                                      selected = "music_genre"),
+                         ),
                 tabPanel("Predicting"),
                 )
   )
