@@ -112,17 +112,17 @@ shinyUI(navbarPage(
                          numericInput("num_cv", label = h6("CV folds"), value = 5, min = 1, max = 10),
                          sliderInput("mtry", label=h6("Tune Parameters"), min=1, max=10, value=c(1,10)),
                          fluidRow(
-                           column(6, actionButton("train_lm", "Fit Linear")),
-                           column(6, actionButton("train_rf", "Fit Rand Forest"))
+                           column(5, actionButton("train_lm", "Fit Linear")),
+                           column(5, actionButton("train_rf", "Fit Rand Forest"))
                          ),
                          br(),
                          fluidRow(
                            column(6, 
                            conditionalPanel(condition = "input.train_lm != 0",
-                                          actionButton("test_lm", "Linear Test"))),
+                                          actionButton("test_lm", "Test Linear"))),
                            column(6, 
                                   conditionalPanel(condition = "input.train_rf != 0",
-                                                   actionButton("test_rf", "RF Test")))
+                                                   actionButton("test_rf", "Test RF")))
                           )),
                          mainPanel(
                            fluidRow(h2("Modeling Song Popularity")),
@@ -131,7 +131,7 @@ shinyUI(navbarPage(
                              column(6, h4("Random Forest Summary")),
                              ),
                            fluidRow(
-                             column(6, verbatimTextOutput("lm_rmse")),
+                             column(6, tableOutput("lm_rmse")),
                              column(6, tableOutput("rf_rmse")),
                            ),
                            fluidRow(
@@ -139,7 +139,15 @@ shinyUI(navbarPage(
                              column(6, plotOutput("rf_mtry")),
                            ),
                            fluidRow(
-                             column(6, verbatimTextOutput("testlm")),
+                             column(6,
+                             conditionalPanel(condition = "input.test_lm != 0",
+                                              h4("LM Model Results on Test Data"))),
+                             column(6,
+                                    conditionalPanel(condition = "input.test_rf != 0",
+                                                     h4("RF Model Results on Test Data")))
+                           ),
+                           fluidRow(
+                             column(6, tableOutput("testlm")),
                              column(6, tableOutput("testrf"))
                            )
                          )

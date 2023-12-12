@@ -84,7 +84,7 @@ function(input, output, session) {
                         trControl=trainControl(method="cv", number=input$num_cv))
     })
       
-    output$lm_rmse <- renderPrint({music_lm()$results[2:4]})
+    output$lm_rmse <- renderTable({music_lm()$results[2:4]}, digits = 4)
     output$lm_sum <- renderPrint({summary(music_lm())})
       
     music_rf <- eventReactive(input$train_rf, {
@@ -97,7 +97,7 @@ function(input, output, session) {
                                  tuneGrid=data.frame(mtry=input$mtry[1]:input$mtry[2]))
     })
       
-    output$rf_rmse <- renderTable({as_tibble(music_rf()$results[ ,1:4])})
+    output$rf_rmse <- renderTable({as_tibble(music_rf()$results[ ,1:4])}, digits = 4)
     output$rf_mtry <- renderPlot({
       ggplot(music_rf()$results, aes(x=mtry, y=Rsquared)) + 
         geom_line()
@@ -107,7 +107,15 @@ function(input, output, session) {
       value <- predict(music_lm(), newdata = musicTest())
     })
     
-    output$testlm <- renderPrint({
-      postResample(lm_test(), musicTest()$popularity)
+    output$testlm <- renderTable({
+      as_tibble_row(postResample(lm_test(), musicTest()$popularity))
+    }, digits = 4)
+    
+    rf_test <- eventReactive(input$test_rf, {
+      value <- predict(music_rf(), newdata = musicTest())
     })
+    
+    output$testrf <- renderTable({
+      as_tibble_row(postResample(rf_test(), musicTest()$popularity))
+    }, digits = 4)
 }
