@@ -152,8 +152,95 @@ shinyUI(navbarPage(
                            )
                          )
                          )),
-                tabPanel("Predicting"),
+                tabPanel("Predicting",
+                conditionalPanel(condition = "input.train_lm == 0 | input.train_rf == 0",
+                                 h3("You must fit both models in the Modeling tab to run a prediction")),
+                fluidRow(
+                column(4,
+                conditionalPanel(condition = "input.model_1 == 'valence'",
+                                 sliderInput("meas_1", label="Valence", min=min(music$valence),
+                                             max=max(music$valence), value=mean(music$valence))),
+                conditionalPanel(condition = "input.model_1 == 'acousticness'",
+                                 sliderInput("meas_1", label="Acousticness", min=min(music$acousticness),
+                                             max=max(music$acousticness), value=mean(music$acousticness))),
+                conditionalPanel(condition = "input.model_1 == 'danceability'",
+                                 sliderInput("meas_1", label="Danceability", min=min(music$danceability),
+                                             max=max(music$danceability), value=mean(music$danceability))),
+                conditionalPanel(condition = "input.model_1 == 'duration_ms'",
+                                 sliderInput("meas_1", label="Duration_ms", min=min(music$duration_ms),
+                                             max=max(music$duration_ms), value=mean(music$duration_ms))),
+                conditionalPanel(condition = "input.model_1 == 'energy'",
+                                 sliderInput("meas_1", label="Energy", min=min(music$energy),
+                                             max=max(music$energy), value=mean(music$energy))),
+                conditionalPanel(condition = "input.model_1 == 'liveness'",
+                                 sliderInput("meas_1", label="Liveness", min=min(music$liveness),
+                                             max=max(music$liveness), value=mean(music$liveness))),
+                conditionalPanel(condition = "input.model_1 == 'loudness'",
+                                 sliderInput("meas_1", label="Loudness", min=min(music$loudness),
+                                             max=max(music$loudness), value=mean(music$loudness))),
+                conditionalPanel(condition = "input.model_1 == 'tempo'",
+                                 sliderInput("meas_1", label="Tempo", min=min(music$tempo),
+                                             max=max(music$tempo), value=mean(music$tempo))),
+                conditionalPanel(condition = "input.model_1 == 'popularity'",
+                                 h4("Predicted outcome is for the measurement 'Popularity'. 
+                                    Please select another measurement from the Modeling tab.")),
+                ),
+                column(4,
+                       conditionalPanel(condition = "input.model_2 == 'valence'",
+                            sliderInput("meas_2", label="Valence", min=min(music$valence),
+                                max=max(music$valence), value=mean(music$valence))),
+                       conditionalPanel(condition = "input.model_2 == 'acousticness'",
+                            sliderInput("meas_2", label="Acousticness", min=min(music$acousticness),
+                                max=max(music$acousticness), value=mean(music$acousticness))),
+                       conditionalPanel(condition = "input.model_2 == 'danceability'",
+                            sliderInput("meas_2", label="Danceability", min=min(music$danceability),
+                                max=max(music$danceability), value=mean(music$danceability))),
+                       conditionalPanel(condition = "input.model_2 == 'duration_ms'",
+                            sliderInput("meas_2", label="Duration_ms", min=min(music$duration_ms),
+                                max=max(music$duration_ms), value=mean(music$duration_ms))),
+                       conditionalPanel(condition = "input.model_2 == 'energy'",
+                            sliderInput("meas_2", label="Energy", min=min(music$energy),
+                                max=max(music$energy), value=mean(music$energy))),
+                       conditionalPanel(condition = "input.model_2 == 'liveness'",
+                            sliderInput("meas_2", label="Liveness", min=min(music$liveness),
+                                max=max(music$liveness), value=mean(music$liveness))),
+                       conditionalPanel(condition = "input.model_2 == 'loudness'",
+                            sliderInput("meas_2", label="Loudness", min=min(music$loudness),
+                                max=max(music$loudness), value=mean(music$loudness))),
+                       conditionalPanel(condition = "input.model_2 == 'tempo'",
+                            sliderInput("meas_2", label="Tempo", min=min(music$tempo),
+                                max=max(music$tempo), value=mean(music$tempo))),
+                       conditionalPanel(condition = "input.model_2 == 'popularity'",
+                                        h4("Predicted outcome is for the measurement 'Popularity'. 
+                                    Please select another measurement from the Modeling tab.")),
+                       ),
+                column(4,
+                       conditionalPanel(condition = "input.model_cat =='music_genre'",
+                       selectInput("pred_cat", "Genre", selected = "Hip-Hop",
+                                   choices=levels(as.factor(music$music_genre)))),
+                       conditionalPanel(condition = "input.model_cat == 'key'",
+                        selectInput("pred_cat", "Key", selected = "A",
+                                    choices=levels(as.factor(music$key))))
+                       )
+                ),
+                br(),
+                fluidRow(
+                  column(6,
+                         conditionalPanel(condition = "input.train_lm != 0",
+                                          actionButton("predict_lm", "Run LM Prediction"))),
+                  column(6,
+                         uiOutput("LM_Prediction"),
+                         uiOutput("col_1"))
+                ),
+                br(),
+                fluidRow(
+                  column(6,
+                         conditionalPanel(condition = "input.train_rf !=0",
+                                          actionButton("predict_rf", "Run RF Prediction"))),
+                  column(6,
+                         uiOutput("RF_Prediction"))
+                )
                 
-                ))
-
-))
+                )
+  )
+)))

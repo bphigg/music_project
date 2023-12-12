@@ -90,11 +90,13 @@ function(input, output, session) {
     music_rf <- eventReactive(input$train_rf, {
       formula <- as.formula(paste(sym("popularity"), "~", sym(input$model_1), "*", sym(input$model_2),
                                   "*", sym(input$model_cat)))
+      withProgress(message = "Building Model", value = 0, {
       value <- train(formula, data=musicTrain(),
                                  method="rf",
                                  preProcess=c("center", "scale"),
                                  trControl=trainControl(method="cv", number=input$num_cv),
                                  tuneGrid=data.frame(mtry=input$mtry[1]:input$mtry[2]))
+      })
     })
       
     output$rf_rmse <- renderTable({as_tibble(music_rf()$results[ ,1:4])}, digits = 4)
@@ -118,4 +120,26 @@ function(input, output, session) {
     output$testrf <- renderTable({
       as_tibble_row(postResample(rf_test(), musicTest()$popularity))
     }, digits = 4)
+    
+    column1 <- eventReactive(input$model_1, {
+      value <- input$model_1
+    })
+    
+    output$col_1 <- renderUI({
+      input$model_1
+    })
+    
+    
+    output$column <- renderPrint({column1()[1]})
+    
+#    lm_predict_result <- eventReactive(input$predict_lm,{
+#      data <- data.frame(!!sym(uiOutput("col_1")) = input$meas_1, "danceability" = input$meas_2,
+#                         "music_genre" = input$pred_cat)
+#      result <- predict(music_lm(), newdata = data)
+#    })
+    
+    output$LM_Prediction <- renderUI({
+      lm_predict_result()
+    })
+    
 }

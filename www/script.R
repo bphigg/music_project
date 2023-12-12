@@ -80,7 +80,7 @@ music_lm$method
 music_lm_p <- predict(music_lm, newdata = musicTest)
 lm_score <- postResample(music_lm_p, musicTest$popularity)
 
-predict(music_lm, newdata = data.frame(loudness=-7, valence=.9, music_genre="Rock"))
+predict(music_lm, newdata = data.frame(-7, .9, "Rock"))
 
 
 music_rf <- train(popularity ~ loudness * valence * music_genre, data=musicTrain,
@@ -105,3 +105,12 @@ as.formula(paste(popularity, "~", quant_var[2]))
 as.formula(quant_var[2])
 formula(paste(quant_var[2], collapse=""))
 as.formula(paste(sym("popularity"), "~", sym(quant_var[2]), "*", sym(quant_var[5]), "*", sym("key")))
+
+min(music$valence)
+
+paste(sym("valence"), "=", .9,",", sym("tempo"), "=", 3.4)
+paste0(sym("valence"), "=", .9,",", sym("tempo"), "=", 3.4)
+
+install.packages(c("shiny", "shinythemes", "tidyverse", "ggplot2", "caret", "DT"))
+
+lapply(c("shiny", "shinythemes", "tidyverse", "ggplot2", "caret", "DT"), library, character.only=TRUE)
