@@ -1,6 +1,9 @@
+library(shiny)
+library(shinythemes)
 library(tidyverse)
 library(ggplot2)
 library(caret)
+library(DT)
 
 
 
@@ -18,7 +21,8 @@ tempindex <- sample(c(1:45000), 5000)
 music <- music[tempindex, ]
 write_csv(music, "songs.csv")
 
-str(read_csv("songs.csv"))
+str(read_csv("www/songs.csv"))
+music <- read_csv("www/songs.csv")
 #music <- music %>% filter(is.na(tempo))
 #temp <- drop_na(music, tempo)
 #music$tempo <- 
@@ -62,15 +66,19 @@ dfIndex <- createDataPartition(music$music_genre, p=0.8, list=FALSE)
 musicTrain <- music[dfIndex, ]
 musicTest <- music[-dfIndex, ]
 
-music_lm <- train(popularity ~ loudness * valence * music_genre, data=musicTrain,
+music[createDataPartition(music$music_genre, p=1-.99, list=FALSE), ]
+
+music_lm <- train(popularity ~ loudness + valence + music_genre, data=musicTrain,
                   method="lm",
                   preProcess=c("center", "scale"),
                   trControl=trainControl(method="cv", number=5))
-music_lm$results
+as_tibble(music_lm$results[2:3])
 summary(music_lm)
 
+music_lm$method
+
 music_lm_p <- predict(music_lm, newdata = musicTest)
-postResample(music_lm_p, musicTest$popularity)
+lm_score <- postResample(music_lm_p, musicTest$popularity)
 
 predict(music_lm, newdata = data.frame(loudness=-7, valence=.9, music_genre="Rock"))
 
@@ -79,8 +87,8 @@ music_rf <- train(popularity ~ loudness * valence * music_genre, data=musicTrain
                   method="rf",
                   preProcess=c("center", "scale"),
                   trControl=trainControl(method="cv", number=5),
-                  tuneGrid=data.frame(mtry=1:10))
-music_rf$results
+                  tuneGrid=data.frame(mtry=1:5))
+music_rf$results[ ,1:4]
 music_rf$bestTune
 
 g <- ggplot(music_rf$results, aes(x=mtry, y=Rsquared))
@@ -90,3 +98,10 @@ music_rf_p <- predict(music_rf, newdata=musicTest)
 postResample(music_rf_p, musicTest$popularity)
 
 predict(music_rf, newdata = data.frame(loudness= -7, valence=.9, music_genre="Rock"))
+
+### code trials
+as.formula(music$popularity)
+as.formula(paste(popularity, "~", quant_var[2]))
+as.formula(quant_var[2])
+formula(paste(quant_var[2], collapse=""))
+as.formula(paste(sym("popularity"), "~", sym(quant_var[2]), "*", sym(quant_var[5]), "*", sym("key")))

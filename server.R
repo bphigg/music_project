@@ -65,4 +65,49 @@ function(input, output, session) {
                 )
     })
     
+    musicTrain <- reactive({
+      value <- music[createDataPartition(music$music_genre, p=input$test_size, list=FALSE), ]
+    })
+    output$train <- renderPrint({dim(musicTrain())})
+    
+    musicTest <- reactive({
+      value <- music[createDataPartition(music$music_genre, p=1-input$test_size, list=FALSE), ]
+    })
+    output$test <- renderPrint({dim(musicTest())})
+    
+    music_lm <- eventReactive(input$train_lm, {
+      formula <- as.formula(paste(sym("popularity"), "~", sym(input$model_1), "+", sym(input$model_2),
+                                  "+", sym(input$model_cat)))
+      value <- train(formula, data=musicTrain(),
+                        method="lm",
+                        preProcess=c("center", "scale"),
+                        trControl=trainControl(method="cv", number=input$num_cv))
+    })
+      
+    output$lm_rmse <- renderPrint({music_lm()$results[2:4]})
+    output$lm_sum <- renderPrint({summary(music_lm())})
+      
+    music_rf <- eventReactive(input$train_rf, {
+      formula <- as.formula(paste(sym("popularity"), "~", sym(input$model_1), "*", sym(input$model_2),
+                                  "*", sym(input$model_cat)))
+      value <- train(formula, data=musicTrain(),
+                                 method="rf",
+                                 preProcess=c("center", "scale"),
+                                 trControl=trainControl(method="cv", number=input$num_cv),
+                                 tuneGrid=data.frame(mtry=input$mtry[1]:input$mtry[2]))
+    })
+      
+    output$rf_rmse <- renderTable({as_tibble(music_rf()$results[ ,1:4])})
+    output$rf_mtry <- renderPlot({
+      ggplot(music_rf()$results, aes(x=mtry, y=Rsquared)) + 
+        geom_line()
+    })
+    
+    lm_test <- eventReactive(input$test_lm, {
+      value <- predict(music_lm(), newdata = musicTest())
+    })
+    
+    output$testlm <- renderPrint({
+      postResample(lm_test(), musicTest()$popularity)
+    })
 }

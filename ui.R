@@ -97,17 +97,55 @@ shinyUI(navbarPage(
     tabsetPanel(type = "tabs",
                 tabPanel("About"),
                 tabPanel("Modeling",
+                         sidebarLayout(
+                           sidebarPanel(
                          h2("Build Models"),
-                         
-                         selectInput("model_1", "1st Measurement", choices = quant_var),
+                         sliderInput("test_size", label=h6("Test Size as %"), min = 0.1, max = 0.9,
+                                     value = 0.8, step = 0.05),
+                         selectInput("model_1", "1st Measurement", selected = "valence",
+                                     choices = quant_var),
                          selectInput("model_2", "2nd Measurement", selected = "danceability",
                                      choices = quant_var),
                          radioButtons("model_cat", label = h6("Categorical Selection"),
                                       choices = list("Genre" = "music_genre", "Key" = "key"),
                                       selected = "music_genre"),
+                         numericInput("num_cv", label = h6("CV folds"), value = 5, min = 1, max = 10),
+                         sliderInput("mtry", label=h6("Tune Parameters"), min=1, max=10, value=c(1,10)),
+                         fluidRow(
+                           column(6, actionButton("train_lm", "Fit Linear")),
+                           column(6, actionButton("train_rf", "Fit Rand Forest"))
                          ),
+                         br(),
+                         fluidRow(
+                           column(6, 
+                           conditionalPanel(condition = "input.train_lm != 0",
+                                          actionButton("test_lm", "Linear Test"))),
+                           column(6, 
+                                  conditionalPanel(condition = "input.train_rf != 0",
+                                                   actionButton("test_rf", "RF Test")))
+                          )),
+                         mainPanel(
+                           fluidRow(h2("Modeling Song Popularity")),
+                           fluidRow(
+                             column(6, h4("Linear Model Summary")),
+                             column(6, h4("Random Forest Summary")),
+                             ),
+                           fluidRow(
+                             column(6, verbatimTextOutput("lm_rmse")),
+                             column(6, tableOutput("rf_rmse")),
+                           ),
+                           fluidRow(
+                             column(6, verbatimTextOutput("lm_sum")),
+                             column(6, plotOutput("rf_mtry")),
+                           ),
+                           fluidRow(
+                             column(6, verbatimTextOutput("testlm")),
+                             column(6, tableOutput("testrf"))
+                           )
+                         )
+                         )),
                 tabPanel("Predicting"),
-                )
-  )
+                
+                ))
 
 ))
