@@ -10,7 +10,7 @@ library(ggplot2)
 library(caret)
 library(DT)
 
-nstall.packages(c("shiny", "shinythemes", "tidyverse", "ggplot2", "caret", "DT"))
+install.packages(c("shiny", "shinythemes", "tidyverse", "ggplot2", "caret", "DT"))
 
 lapply(c("shiny", "shinythemes", "tidyverse", "ggplot2", "caret", "DT"), library, character.only=TRUE)
 
