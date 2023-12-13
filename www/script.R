@@ -80,7 +80,7 @@ music_lm$method
 music_lm_p <- predict(music_lm, newdata = musicTest)
 lm_score <- postResample(music_lm_p, musicTest$popularity)
 
-predict(music_lm, newdata = data.frame(-7, .9, "Rock"))
+predict(music_lm, newdata = data.frame(liveness = .1, energy = .2, music_genre = "Rock"))
 
 
 music_rf <- train(popularity ~ loudness * valence * music_genre, data=musicTrain,
@@ -97,7 +97,17 @@ g + geom_line()
 music_rf_p <- predict(music_rf, newdata=musicTest)
 postResample(music_rf_p, musicTest$popularity)
 
-predict(music_rf, newdata = data.frame(loudness= -7, valence=.9, music_genre="Rock"))
+predict_df <- data.frame("valence" = NA, "acousticness" = NA, "danceability" = NA, 
+                         "duration_ms" = NA,
+                         "energy" = NA, "liveness" = NA, "loudness" = NA, "tempo" = NA, 
+                         "music_genre" = NA, "key" = NA)
+predict_df$loudness <- -4
+predict_df$valence <- .7
+predict_df$music_genre <- "Hip-Hop"
+
+predict_df["loudness"]
+
+predict(music_lm, newdata = predict_df)
 
 ### code trials
 as.formula(music$popularity)
@@ -123,3 +133,7 @@ df
 
 substitute(music)
 
+x <- data.frame("hi" = NA, "lo" = NA)
+x
+
+x$a <- 5

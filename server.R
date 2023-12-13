@@ -132,14 +132,22 @@ function(input, output, session) {
     
     output$column <- renderPrint({column1()[1]})
     
+#    predict_df <- data.frame("valence" = NA, "acousticness" = NA, "danceability" = NA, "duration_ms" = NA,
+#                             "energy" = NA, "liveness" = NA, "loudness" = NA, "tempo" = NA, 
+#                             "music_genre" = NA, "key" = NA)
+    
     lm_predict_result <- eventReactive(input$predict_lm,{
-#      col1 <- deparse(input$model_1)
-#      col2 <- deparse(input$model_2)
-#      col3 <- deparse(input$model_cat)
-      cols <- c(deparse(input$model_1), deparse(input$model_2), deparse(input$model_cat))
-      df <- data_frame(input$meas_1, input$meas_2, input$pred_cat)
-      colnames(df) <- cols
-      result <- predict(music_lm(), newdata = df)
+      predict_df <- data.frame("valence" = NA, "acousticness" = NA, "danceability" = NA, 
+                               "duration_ms" = NA,
+                               "energy" = NA, "liveness" = NA, "loudness" = NA, "tempo" = NA, 
+                               "music_genre" = NA, "key" = NA)
+      predict_df[input$model_1][1,] <- input$meas_1
+      predict_df[input$model_2][1,] <- input$meas_2
+      predict_df[input$model_cat][1,] <- input$pred_cat
+#      cols <- c(deparse(input$model_1), deparse(input$model_2), deparse(input$model_cat))
+#      df <- data_frame(input$meas_1, input$meas_2, input$pred_cat)
+#      colnames(df) <- cols
+      result <- predict(music_lm(), newdata = predict_df)
     })
     
     output$LM_Prediction <- renderUI({
@@ -147,13 +155,17 @@ function(input, output, session) {
     })
     
     rf_predict_result <- eventReactive(input$predict_rf,{
-      #      col1 <- deparse(input$model_1)
-      #      col2 <- deparse(input$model_2)
-      #      col3 <- deparse(input$model_cat)
-      cols <- c(deparse(input$model_1), deparse(input$model_2), deparse(input$model_cat))
-      df <- data.frame(input$meas_1, input$meas_2, input$pred_cat)
-      colnames(df) <- cols
-      result <- predict(music_rf(), newdata = df)
+      predict_df <- data.frame("valence" = NA, "acousticness" = NA, "danceability" = NA, 
+                               "duration_ms" = NA,
+                               "energy" = NA, "liveness" = NA, "loudness" = NA, "tempo" = NA, 
+                               "music_genre" = NA, "key" = NA)
+      predict_df[input$model_1][1,] <- input$meas_1
+      predict_df[input$model_2][1,] <- input$meas_2
+      predict_df[input$model_cat][1,] <- input$pred_cat
+#      cols <- c(deparse(input$model_1), deparse(input$model_2), deparse(input$model_cat))
+#      df <- data.frame(input$meas_1, input$meas_2, input$pred_cat)
+#      colnames(df) <- cols
+      result <- predict(music_rf(), newdata = predict_df)
     })
     
     output$RF_Prediction <- renderUI({

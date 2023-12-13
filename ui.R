@@ -250,6 +250,7 @@ shinyUI(navbarPage(
                          conditionalPanel(condition = "input.train_lm != 0",
                                           actionButton("predict_lm", "Run LM Prediction"))),
                   column(6,
+                         HTML("<b>LM Popularity Prediction</b>"),
                          uiOutput("LM_Prediction")),
                 ),
                 br(),
@@ -258,16 +259,9 @@ shinyUI(navbarPage(
                          conditionalPanel(condition = "input.train_rf !=0",
                                           actionButton("predict_rf", "Run RF Prediction"))),
                   column(6,
+                         HTML("<b>RF Popularity Prediction</b>"),
                          uiOutput("RF_Prediction"))
                 ),
-                br(),
-                fluidRow(
-                  column(4,
-                         uiOutput("col_1")),
-                  column(4,
-                         uiOutput("col_2")),
-                  column(4)
-                  )
                 )
                 
                 )
