@@ -20,7 +20,13 @@ shinyUI(navbarPage(
            h2(strong("Welcome to the VU App")),
            strong("an exploration of song measurements"),
            img(src="vu_image1.png", align = "center", height = "50%", width = "100%"),
-           h5("Empty For Now")
+           HTML("This app is designed to explore song data information collected from <b>Spotify</b>. It comes from <b>Kaggle</b> and is available <a href='https://www.kaggle.com/datasets/vicsuperman/prediction-of-music-genre'> here </a>. The data was originally a collection of measurements from over 50,000 songs but has been paired down to 5,000 songs through random sampling. Variables consist of nine continuous measurements and two categorical measurements. The continuous measurement <b>Popularity</b> will be used as the outcome for predictions."),
+           br(),
+           br(),
+           HTML("<b>Plots/Graphs</b> - In this tab, you will be able to explore visually the different relationships between song types and measurements as well look up summaries about each measurement. You will be able to view linear relationships between variables, distributions by category, and compare distribution frequencies between categories."),
+           br(),
+           br(),
+           HTML("<b>Modeling</b> - In these tabs you will be able to read descriptions of the models used, build your own models by selecting from a variety of parameters, view and compare model training and testing statistics, and finally, run your own predictions to determine the popularity of a given song based on your selected input parameters.")
            ),
   
 # Plots/Graphs
@@ -95,7 +101,22 @@ shinyUI(navbarPage(
 # Modeling
   tabPanel("Modeling",
     tabsetPanel(type = "tabs",
-                tabPanel("About"),
+                tabPanel("About",
+                         h3("Predict Popularity of a Song"),
+                         HTML("In this section you will be able to fit two types of predictive models - <b>Multiple Linear Regression</b> and <b>Random Forest</b>. In the Modeling tab, you can select two measurements and one categorical variable to train your model. Once you run each model with the 'Fit' buttons you will be able to view the training results as well as test the models on a testing dataset. You may also select the size of both the test and training sets."),
+                         br(),
+                         HTML("On the Predict panel, you will be able to select specific measurements from your selected training variables and get a prediction of popularity."),
+                         h4("Model Information"),
+                         HTML("<b>Multiple Linear Regression</b> - Simple Linear Regression models create a linear equation between two variables - a dependent variable ('y') and independent variable ('x). The model is based on minimizing the sum of squared residuals and is used to predict the outcome of the dependent variable ('y'). Often, however, better predictions can be made if more variables are considered in the prediction model. <b>Multiple Linear Regression Models</b> allow for multiple variables to be used in calculating predictive outcomes. When more variables, or features, are added to the model the regression line can become more 'flexible' - as seen in the additional terms and features of this example regression equation."),
+                         withMathJax(),
+                         helpText('Where \\(x_{n}\\) is a separate predictor variable: \\(y_{i}\\) = \\(\\beta\\)\\(_{0}\\) + \\(\\beta\\)\\(_{1}\\)\\(x_{1}\\) + \\(\\beta\\)\\(_{2}\\)\\(x_{2}^{2}\\) + ... + \\(\\beta\\)\\(_{n}\\)\\(x_{n}\\)'),
+                         HTML("However, when adding additional features to the MLR model, it is possible that certain variables will be correlated which will hinder the model's performance. Multiple Linear Regression models perform best when all features are independent of each other."),
+                         br(),
+                         br(),
+                         HTML("<b>Random Forest</b> - Random Forest utilizes bootstrap aggregation to calculate the average response over many fitted trees. Whereas a Classification and Bagged Tree model will use all predictors in modeling, Random Forest will use a random subset of predictors for each bootstrap sample. By randomly selecting a subset of predictors, a good predictor or two will not dominate the tree fits and thus the variance from aggregation will not be reduced, resulting in a more robust model."),
+                         br(),
+                         HTML("However, Random Forests are very compuntationally expensive since it iterates over a range of variables to determine the best fit. Before deciding on a Random Forest Model, you will want to compare the training and testing results with other models to determine if the increase in accuracy (if any) is worth the computational expense."),
+                         ),
                 tabPanel("Modeling",
                          sidebarLayout(
                            sidebarPanel(
@@ -229,8 +250,7 @@ shinyUI(navbarPage(
                          conditionalPanel(condition = "input.train_lm != 0",
                                           actionButton("predict_lm", "Run LM Prediction"))),
                   column(6,
-                         uiOutput("LM_Prediction"),
-                         uiOutput("col_1"))
+                         uiOutput("LM_Prediction")),
                 ),
                 br(),
                 fluidRow(
@@ -239,8 +259,17 @@ shinyUI(navbarPage(
                                           actionButton("predict_rf", "Run RF Prediction"))),
                   column(6,
                          uiOutput("RF_Prediction"))
+                ),
+                br(),
+                fluidRow(
+                  column(4,
+                         uiOutput("col_1")),
+                  column(4,
+                         uiOutput("col_2")),
+                  column(4)
+                  )
                 )
                 
                 )
   )
-)))
+))

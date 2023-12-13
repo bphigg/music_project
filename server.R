@@ -121,25 +121,43 @@ function(input, output, session) {
       as_tibble_row(postResample(rf_test(), musicTest()$popularity))
     }, digits = 4)
     
-    column1 <- eventReactive(input$model_1, {
-      value <- input$model_1
+    output$col_2 <- renderUI({
+      deparse(input$model_2)
     })
     
     output$col_1 <- renderUI({
-      input$model_1
+      deparse(input$model_1)
     })
     
     
     output$column <- renderPrint({column1()[1]})
     
-#    lm_predict_result <- eventReactive(input$predict_lm,{
-#      data <- data.frame(!!sym(uiOutput("col_1")) = input$meas_1, "danceability" = input$meas_2,
-#                         "music_genre" = input$pred_cat)
-#      result <- predict(music_lm(), newdata = data)
-#    })
+    lm_predict_result <- eventReactive(input$predict_lm,{
+#      col1 <- deparse(input$model_1)
+#      col2 <- deparse(input$model_2)
+#      col3 <- deparse(input$model_cat)
+      cols <- c(deparse(input$model_1), deparse(input$model_2), deparse(input$model_cat))
+      df <- data_frame(input$meas_1, input$meas_2, input$pred_cat)
+      colnames(df) <- cols
+      result <- predict(music_lm(), newdata = df)
+    })
     
     output$LM_Prediction <- renderUI({
       lm_predict_result()
+    })
+    
+    rf_predict_result <- eventReactive(input$predict_rf,{
+      #      col1 <- deparse(input$model_1)
+      #      col2 <- deparse(input$model_2)
+      #      col3 <- deparse(input$model_cat)
+      cols <- c(deparse(input$model_1), deparse(input$model_2), deparse(input$model_cat))
+      df <- data.frame(input$meas_1, input$meas_2, input$pred_cat)
+      colnames(df) <- cols
+      result <- predict(music_rf(), newdata = df)
+    })
+    
+    output$RF_Prediction <- renderUI({
+      rf_predict_result()
     })
     
 }

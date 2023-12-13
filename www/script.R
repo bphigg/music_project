@@ -114,3 +114,12 @@ paste0(sym("valence"), "=", .9,",", sym("tempo"), "=", 3.4)
 install.packages(c("shiny", "shinythemes", "tidyverse", "ggplot2", "caret", "DT"))
 
 lapply(c("shiny", "shinythemes", "tidyverse", "ggplot2", "caret", "DT"), library, character.only=TRUE)
+
+
+df <- data.frame(2, 4, 6)
+colnames(df) <- c(t, u, s)
+colnames(df) <- c("a", "b", "c")
+df
+
+substitute(music)
+
