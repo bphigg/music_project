@@ -12,11 +12,11 @@ The app can be run through an **R Studio** session with access to the internet.
 * library(caret)
 * library(DT)
 
-**This code will `install` all the packages**:
+**This code will `install` all the packages**:  
 `install.packages(c("shiny", "shinythemes", "tidyverse", "ggplot2", "caret", "DT"))`
 
-**This code will `load` all the pakcages to your current R session**:
+**This code will `load` all the pakcages to your current R session**:  
 `lapply(c("shiny", "shinythemes", "tidyverse", "ggplot2", "caret", "DT"), library, character.only=TRUE)`
 
-**Once the packages have been loaded, run the following code to execute the app in you R Studio Session**:
+**Once the packages have been loaded, run the following code to execute the app in you R Studio Session**:  
 `shiny::runGitHub("music_project", "bphigg")`
