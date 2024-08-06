@@ -1,4 +1,4 @@
-# Project 4 - shiny app
+# Project 4 - music shiny app
 `brian higginbotham`
 
 This app is designed to explore music data gathered from Spotify and predict the popularity of a song utilizing several variables.
